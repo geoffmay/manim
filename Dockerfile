@@ -1,6 +1,8 @@
 FROM python:3.7
-RUN apt-get update \
-    && apt-get install -qqy --no-install-recommends \
+RUN apt-get update -y \
+    # && apt-get install -y --no-install-recommends \
+    && apt-get install -y \
+        # python3.8-dev \
         apt-utils \
         ffmpeg \
         sox \
@@ -11,16 +13,22 @@ RUN apt-get update \
         texlive-latex-recommended \
         texlive-science \
         tipa \
-        libx11-dev \
+        python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-COPY src/* /manim
+COPY src/* /manim/
+COPY .git /manim/
+    # && add-apt-repository universe \
+
+# RUN cd /manim \
+#     && python setup.py sdist \
+#     && python -m pip install dist/manimlib*
 RUN cd /manim \
-    && python setup.py sdist \
-    && python -m pip install dist/manimlib*
+     && python -m pip install manimlib
+#     && python -m pip3 install manimlib*
 
 
-# if you want the gui in windows: https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde
+# # if you want the gui in windows: https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde
 RUN cd /usr/local && \
     wget https://download.jetbrains.com/python/pycharm-community-2020.2.tar.gz && \
     tar -xvf pycharm-community-2020.2.tar.gz && \
